@@ -11,7 +11,7 @@ export function Backspace(props) {
                 className="btn btn-dark"
                 onClick={handleClick}
             >
-                {"<-"}
+                {"⌫"}
             </button>
         </>
     );

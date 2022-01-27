@@ -7,32 +7,37 @@ import { Enter } from "./Enter";
 export function Board(props) {
     const [userInput, setUserInput] = useState("");
 
-    const [value, setValue] = useState({
+    const [score, setScore] = useState({
         word: "",
         score: []
     })
   
+    //submit guess to the backend lambda
     const handleSubmit = (evt) => {
         alert(`Submitting Guess: ${userInput}`);
         axios.get(`https://0kvvec0kt8.execute-api.us-east-1.amazonaws.com/word/${userInput}`).then((response) => {
-            console.log(response.data);
-            console.log(response.data.scoring);
+            if(response.status >= 200 && response.status < 400) {
+                var newScore = {
+                    word: userInput,
+                    score: response.data.scoring
+                };
 
-            var newState = {
-                word: userInput,
-                score: response.data.scoring
-            };
-
-            setValue(newState);
+                console.log("changing Board score")
+                setScore(newScore);
+                setUserInput("");
+            }
         })
     }
 
+    //add letters to the user's input, only up to 5 chars
     const addLetterToInput = (letter) => {
-        setUserInput(userInput + letter);
+        if(userInput.length < 5) {
+            setUserInput(userInput + letter);
+        }
     }
 
+    //handle letters, backspace and enter
     const handleUserKeyboard = (event) => {
-        //event.stopPropagation();
         if(event.key && event.keyCode) {
             if((event.keyCode >= 65 && event.keyCode <= 95)) {
                 // letters
@@ -47,10 +52,12 @@ export function Board(props) {
         }
     }
 
+    //backspace function
     const removeLetterFromInput = () => {
-        setUserInput(userInput.slice(0, -1));
+        setUserInput(userInput.slice(0, -1)); //remove last letter
     }
     
+    //add event listener to handle keyboard inputs
     useEffect(() => {
         document.addEventListener("keydown", handleUserKeyboard, false);
         return () => {
@@ -60,7 +67,7 @@ export function Board(props) {
 
     return (
         <>
-            <AvailableLetters addLetter={addLetterToInput} value={value}/>
+            <AvailableLetters addLetter={addLetterToInput} score={score}/>
             <Enter submit={handleSubmit}/>
             <Backspace backspace={removeLetterFromInput}/>
             <div>
