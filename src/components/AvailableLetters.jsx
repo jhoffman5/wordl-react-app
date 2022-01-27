@@ -15,7 +15,7 @@ export function AvailableLetters(props) {
     const lettersDivs = [];
 
     letters.forEach(letter => {
-        lettersDivs.push(<Letter key={letter} letter={letter}/>)
+        lettersDivs.push(<Letter key={letter} letter={letter} addLetter={props.addLetter}/>)
     })
 
     return (
