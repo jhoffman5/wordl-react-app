@@ -1,7 +1,7 @@
 export function Enter(props) {
     const handleClick = event => {
         event.preventDefault();
-        console.log("Event triggered in Enter! Passing back to parent");
+        //console.log("Event triggered in Enter! Passing back to parent");
         props.submit();
     }
 

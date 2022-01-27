@@ -107,41 +107,43 @@ const letters = [
         availability: 0
     }]
 
-export function AvailableLetters(props) {
+export function Keyboard(props) {
 
     const [letterObjs, setLetterObjs] = useState(letters);
 
     const [scoring, setScoring] = useState(props.score);
 
     useEffect(() => {
-        if(props.score != scoring){
-            console.log("received Board score in child: AvailableLetters")
+        if(props.score !== scoring){
+            //console.log("received Board score in child: AvailableLetters")
             setScoring(props.score)
-            console.log("setting AvailableLetters score", props.score)
+            //console.log("setting AvailableLetters score", props.score)
         }
-    }, [props.score])
+    }, [scoring, props.score])
 
     useEffect(() => {
-            console.log("calculating availability!")
-            if(scoring.score.length === scoring.word.length)
-            {
-                scoring.score.forEach((score, index) => {
-                    var letterObj = letterObjs.find(({ letter }) => letter === scoring.word.charAt(index))
-                    
-                    if(score === 0) {
-                        letterObj.availability = -1
-                    } else if (score === 1 && letterObj.availability === 0) {
-                        letterObj.availability = 1
-                    } else if (score === 2) {
-                        letterObj.availability = 2;
-                    }
+            //console.log("calculating availability!")
+            //console.log(scoring)
+            if(typeof scoring !== 'undefined') {
+                if(scoring.score.length === scoring.word.length) {
+                    scoring.score.forEach((score, index) => {
+                        var letterObj = letterObjs.find(({ letter }) => letter === scoring.word.charAt(index))
+                        
+                        if(score === 0) {
+                            letterObj.availability = -1
+                        } else if (score === 1 && letterObj.availability === 0) {
+                            letterObj.availability = 1
+                        } else if (score === 2) {
+                            letterObj.availability = 2;
+                        }
 
-                });
+                    });
 
-                setLetterObjs([...letterObjs]);
+                    setLetterObjs([...letterObjs]);
+                }
             }
-            console.log(letterObjs)
-            console.log("Score changed!!!")
+            //console.log(letterObjs)
+            //console.log("Score changed!!!")
     }, [scoring]);
 
     /*useEffect(() => {

@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { AvailableLetters } from "./AvailableLetters";
+import { Keyboard } from "./Keyboard";
 import { Backspace } from "./Backspace";
 import { Enter } from "./Enter";
+import { GuessResultsBoard } from "./GuessResultsBoard";
 
 export function Board(props) {
     const [userInput, setUserInput] = useState("");
+    const [guesses, setGuesses] = useState([]);
 
-    const [score, setScore] = useState({
-        word: "",
-        score: []
-    })
+    const [score, setScore] = useState()
   
     //submit guess to the backend lambda
     const handleSubmit = (evt) => {
-        alert(`Submitting Guess: ${userInput}`);
-        axios.get(`https://0kvvec0kt8.execute-api.us-east-1.amazonaws.com/word/${userInput}`).then((response) => {
-            if(response.status >= 200 && response.status < 400) {
-                var newScore = {
-                    word: userInput,
-                    score: response.data.scoring
-                };
 
-                console.log("changing Board score")
-                setScore(newScore);
-                setUserInput("");
-            }
-        })
+        //check if userInput has already been guessed
+        if(!(guesses.filter(e => e.word === userInput).length > 0))
+        {
+            axios.get(`https://0kvvec0kt8.execute-api.us-east-1.amazonaws.com/word/${userInput}`).then((response) => {
+                if(response.status >= 200 && response.status < 400) {
+                    var newScore = {
+                        word: userInput,
+                        score: response.data.scoring
+                    };
+
+                    // console.log("changing Board score")
+                    setScore(newScore);
+                    setGuesses([...guesses, newScore]);
+                    setUserInput("");
+                }
+            })
+        }
     }
 
     //add letters to the user's input, only up to 5 chars
@@ -67,7 +71,8 @@ export function Board(props) {
 
     return (
         <>
-            <AvailableLetters addLetter={addLetterToInput} score={score}/>
+            <GuessResultsBoard guesses={guesses}/>
+            <Keyboard addLetter={addLetterToInput} score={score}/>
             <Enter submit={handleSubmit}/>
             <Backspace backspace={removeLetterFromInput}/>
             <div>

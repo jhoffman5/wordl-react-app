@@ -6,13 +6,13 @@ export function Letter(props) {
 
     const handleClick = event => {
         event.preventDefault();
-        console.log("Event triggered in Letter! Passing back to parent AvailableLetters");
+        //console.log("Event triggered in Letter! Passing back to parent AvailableLetters");
         props.addLetter(props.letter);
     }
 
     useEffect(() => {
-        if(props.availability != availability) {
-            console.log(props.letter, props.availability)
+        if(props.availability !== availability) {
+            //console.log(props.letter, props.availability)
             setAvailability(props.availability);
             if(props.availability === -1) {
                 setLetterClass("unavailable");

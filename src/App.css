@@ -23,6 +23,18 @@
     background-color: green;
   }
 
+div.guessletter {
+ background-color: black;
+}
+
+div.guessletter.present {
+  background-color: goldenrod;
+}
+
+div.guessletter.correct {
+  background-color: green;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
