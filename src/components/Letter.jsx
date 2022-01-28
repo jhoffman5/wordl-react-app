@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 export function Letter(props) {
-    const [availability, setAvailability] = useState("");
+    const [availability, setAvailability] = useState(0);
     const [letterClass, setLetterClass] = useState("");
 
     const handleClick = event => {
@@ -12,7 +12,6 @@ export function Letter(props) {
 
     useEffect(() => {
         if(props.availability !== availability) {
-            //console.log(props.letter, props.availability)
             setAvailability(props.availability);
             if(props.availability === -1) {
                 setLetterClass("unavailable");
@@ -22,13 +21,13 @@ export function Letter(props) {
                 setLetterClass("correct");
             }
         }
-    }, [props.availability])
+    }, [props.availability, props.letter])
 
     return (
         <>
             <button
                 className={`btn btn-dark keyboard-button ${letterClass} col`}
-                onClick={handleClick}
+                onClick={() => handleClick}
             >
                 {props.letter}
             </button>

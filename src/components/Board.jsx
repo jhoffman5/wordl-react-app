@@ -1,23 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import axios from "axios";
 import { Keyboard } from "./Keyboard";
 import { Backspace } from "./Backspace";
 import { Enter } from "./Enter";
 import { GuessResultsBoard } from "./GuessResultsBoard";
+import { Menu } from "./Menu";
 
 export function Board(props) {
     const [userInput, setUserInput] = useState("");
+    const [userLength, setUserLength] = useState(7);
     const [guesses, setGuesses] = useState([]);
 
-    const [score, setScore] = useState()
+    const [score, setScore] = useState();
+
+    //const [doResetBoard, setDoResetBoard] = useState(false);
   
     //submit guess to the backend lambda
     const handleSubmit = (evt) => {
-
         //check if userInput has already been guessed
-        if(!(guesses.filter(e => e.word === userInput).length > 0))
+        if(!(guesses.filter(e => e.word === userInput).length > 0) && userInput && userInput.length === userLength)
         {
-            axios.get(`https://0kvvec0kt8.execute-api.us-east-1.amazonaws.com/word/${userInput}`).then((response) => {
+            axios.get(`https://0kvvec0kt8.execute-api.us-east-1.amazonaws.com/length/${userLength}/word/${userInput}`).then((response) => {
                 if(response.status >= 200 && response.status < 400) {
                     var newScore = {
                         word: userInput,
@@ -35,7 +38,7 @@ export function Board(props) {
 
     //add letters to the user's input, only up to 5 chars
     const addLetterToInput = (letter) => {
-        if(userInput.length < 5) {
+        if(userInput.length < userLength) {
             setUserInput(userInput + letter);
         }
     }
@@ -69,12 +72,24 @@ export function Board(props) {
         };
     }, [handleUserKeyboard])
 
+    const handleChangeMode = (length) => {
+        console.log("changing mode", length)
+        setUserLength(length);
+        setGuesses([]);
+        setScore({});
+
+        //save the current board state to storage
+        //clear the keyboard of any "availablility" and get guesses from some cookie/local storage
+        // then run the data back through to set the board to their previous state  
+    }
+
     return (
         <>
+            <Menu handleChangeMode={(test) => handleChangeMode(test)}/>
             <GuessResultsBoard guesses={guesses}/>
-            <Keyboard addLetter={addLetterToInput} score={score}/>
-            <Enter submit={handleSubmit}/>
-            <Backspace backspace={removeLetterFromInput}/>
+            <Keyboard addLetter={() => addLetterToInput} score={score}/>
+            <Enter submit={() => handleSubmit}/>
+            <Backspace backspace={() => removeLetterFromInput}/>
             <div>
                 {userInput.toUpperCase()}
             </div>

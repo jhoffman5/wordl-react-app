@@ -116,6 +116,7 @@ export function Keyboard(props) {
     useEffect(() => {
         if(props.score !== scoring){
             //console.log("received Board score in child: AvailableLetters")
+            //console.log(props.score)
             setScoring(props.score)
             //console.log("setting AvailableLetters score", props.score)
         }
@@ -124,7 +125,7 @@ export function Keyboard(props) {
     useEffect(() => {
             //console.log("calculating availability!")
             //console.log(scoring)
-            if(typeof scoring !== 'undefined') {
+            if(typeof scoring !== 'undefined' && typeof scoring.score !== 'undefined') {
                 if(scoring.score.length === scoring.word.length) {
                     scoring.score.forEach((score, index) => {
                         var letterObj = letterObjs.find(({ letter }) => letter === scoring.word.charAt(index))
@@ -146,33 +147,29 @@ export function Keyboard(props) {
             //console.log("Score changed!!!")
     }, [scoring]);
 
-    /*useEffect(() => {
-        setValues(props.value);
-        console.log(props.value)
-    }, [props.value]);*/
 
     return (
         <>
-            <div className="row">
-            {
-                letterObjs.slice(0,10).map((object, i) => {
-                    return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={props.addLetter}/>;
-                })
-            }
-            </div>
-            <div className="row">
-            {
+                <div className="row">
+                {
+                    letterObjs.slice(0,10).map((object, i) => {
+                        return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={props.addLetter}/>;
+                    })
+                }
+                </div>
+                <div className="row">
+                {
                 letterObjs.slice(10,19).map((object, i) => {
                     return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={props.addLetter}/>;
                 })
-            }
-            </div>
-            <div className="row">
-            {
-                letterObjs.slice(18,26).map((object, i) => {
-                    return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={props.addLetter}/>;
-                })
-            }
+                }
+                </div>
+                <div className="row">
+                {
+                    letterObjs.slice(18,26).map((object, i) => {
+                        return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={props.addLetter}/>;
+                    })
+                }
             </div>
         </>
     );
