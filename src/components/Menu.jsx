@@ -1,9 +1,8 @@
 export function Menu(props) {
     return (
         <>
-        <div className="row">
-            <button className="card" onClick={() => {console.log("hellos");
-            props.handleChangeMode(5)}}>
+        <div className="row menu">
+            <button className="card" onClick={() => props.handleChangeMode(5)}>
                 5
             </button>
             <button className="card" onClick={() => props.handleChangeMode(6)}>

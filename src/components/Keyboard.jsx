@@ -115,59 +115,65 @@ export function Keyboard(props) {
 
     useEffect(() => {
         if(props.score !== scoring){
-            //console.log("received Board score in child: AvailableLetters")
-            //console.log(props.score)
             setScoring(props.score)
-            //console.log("setting AvailableLetters score", props.score)
         }
-    }, [scoring, props.score])
+        
+        if(props.resetBoard)
+        {
+            letterObjs.forEach((obj, i) => {
+                obj.availability = 0;
+            })
+            props.didReset();
+        }
+    }, [scoring, props.score, props.resetBoard])
 
     useEffect(() => {
-            //console.log("calculating availability!")
-            //console.log(scoring)
-            if(typeof scoring !== 'undefined' && typeof scoring.score !== 'undefined') {
-                if(scoring.score.length === scoring.word.length) {
-                    scoring.score.forEach((score, index) => {
-                        var letterObj = letterObjs.find(({ letter }) => letter === scoring.word.charAt(index))
-                        
-                        if(score === 0) {
-                            letterObj.availability = -1
-                        } else if (score === 1 && letterObj.availability === 0) {
+        if(typeof scoring !== 'undefined' && typeof scoring.score !== 'undefined') {
+            if(scoring.score.length === scoring.word.length) {
+                scoring.score.forEach((score, index) => {
+                    var letterObj = letterObjs.find(({ letter }) => letter === scoring.word.charAt(index))
+
+                    if(score === 0) {
+                        letterObj.availability = -1
+                    } else if (score === 1) {
+                        if(letterObj.availability < 1) {
                             letterObj.availability = 1
-                        } else if (score === 2) {
-                            letterObj.availability = 2;
                         }
+                    } else if (score === 2) {
+                        letterObj.availability = 2;
+                    } else {
+                        letterObj.availability = 0
+                    }
 
-                    });
+                });
 
-                    setLetterObjs([...letterObjs]);
-                }
+                setLetterObjs([...letterObjs]);
             }
-            //console.log(letterObjs)
-            //console.log("Score changed!!!")
-    }, [scoring]);
-
+        }
+    }, [scoring])
 
     return (
         <>
                 <div className="row">
                 {
                     letterObjs.slice(0,10).map((object, i) => {
-                        return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={props.addLetter}/>;
+                        return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
                     })
                 }
                 </div>
                 <div className="row">
                 {
-                letterObjs.slice(10,19).map((object, i) => {
-                    return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={props.addLetter}/>;
-                })
+                    letterObjs.slice(10,19).map((object, i) => {
+                        return (
+                            <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
+                        );
+                    })
                 }
                 </div>
                 <div className="row">
                 {
-                    letterObjs.slice(18,26).map((object, i) => {
-                        return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={props.addLetter}/>;
+                    letterObjs.slice(19,26).map((object, i) => {
+                        return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
                     })
                 }
             </div>
