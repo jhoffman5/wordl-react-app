@@ -3,7 +3,7 @@ import React from "react";
 export function GuessResult(props) {
     return (
         <>
-        <div className="row">
+        <div className="row guess-row">
         {
             props.guess.score.map((charScore, i) => {   
                 return (

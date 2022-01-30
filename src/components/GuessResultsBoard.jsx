@@ -12,12 +12,12 @@ export function GuessResultsBoard(props) {
     }, [props.guesses, guesses])
 
     return (
-        <>
+        <div className="container-fluid">
         {
             guesses.map((guess, i) => {
                 return <GuessResult key={guess.word + i} guess={guess} rowNum={i}/>;
             })
         }
-        </>
+        </div>
     );
 }

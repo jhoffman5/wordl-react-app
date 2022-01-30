@@ -1,3 +1,13 @@
+/*
+
+Green: #538d4e
+Yellow: #b59f3b
+Light Gray: #818384
+Dark Gray: #3a3a3c
+Black: #121213
+
+*/
+
 .App {
   text-align: center;
 }
@@ -8,6 +18,7 @@
 }
 
 .btn.keyboard-button {
+  background-color: #818384;
   display: inline-block;
   width: 36px;
   height: 36px;
@@ -21,31 +32,41 @@
     height: 36px;
   }
   .btn.keyboard-button.unavailable {
-    background-color: black;
+    background-color: #3a3a3c;
   }
   .btn.keyboard-button.present{
-    background-color: goldenrod;
+    background-color: #b59f3b;
   }
   .btn.keyboard-button.correct {
-    background-color: green;
+    background-color: #538d4e;
   }
 
+div.guess-row {
+  justify-content: center;
+}
+
 div.guessletter {
-  background-color: black;
+  background-color: #3a3a3c;
   font-size: 72px;
 
-  width: 100%;
+  width: 3rem;
+  max-width: 3rem; 
+  height: 3rem;
+  max-height: 3rem;
+
   display: inline-flex;
   justify-content: center;
   align-items: center;
   font-size: 2rem;
-  line-height: 2rem;
-  font-weight: bold;
+  /*line-height: 2rem;
+  font-weight: bold;*/
   vertical-align: middle;
   box-sizing: border-box;
-  color: var(--tile-text-color);
+  /*color: var(--tile-text-color);*/
   text-transform: uppercase;
   user-select: none;
+
+  margin: 2px;
 }
 
 div.guessletter.not-submitted {
@@ -53,11 +74,11 @@ div.guessletter.not-submitted {
 }
 
 div.guessletter.present {
-  background-color: goldenrod;
+  background-color: #b59f3b;
 }
 
 div.guessletter.correct {
-  background-color: green;
+  background-color: #538d4e;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -66,14 +87,14 @@ div.guessletter.correct {
   }
 }
 
-.App-header {
-  background-color: #282c34;
+.App-body {
+  background-color: #121213;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  /*font-size: calc(10px + 2vmin);*/
   color: white;
 }
 
@@ -88,4 +109,24 @@ div.guessletter.correct {
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-main {
+  height: 80vh;
+  width: 80vw;
+  position:fixed;
+  background: #121213;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
 }
