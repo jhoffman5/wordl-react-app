@@ -8,23 +8,48 @@
 }
 
 .btn.keyboard-button {
-  display: flex;
+  display: inline-block;
+  width: 36px;
+  height: 36px;
 }
+  .btn.keyboard-button.letter {
+    width: 36px;
+    height: 36px;
+  }
+  .btn.keyboard-button.control {
+    width: 72px;
+    height: 36px;
+  }
   .btn.keyboard-button.unavailable {
-    display: flex;
     background-color: black;
   }
   .btn.keyboard-button.present{
-    display: flex;
     background-color: goldenrod;
   }
   .btn.keyboard-button.correct {
-    display: flex;
     background-color: green;
   }
 
 div.guessletter {
- background-color: black;
+  background-color: black;
+  font-size: 72px;
+
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  line-height: 2rem;
+  font-weight: bold;
+  vertical-align: middle;
+  box-sizing: border-box;
+  color: var(--tile-text-color);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+div.guessletter.not-submitted {
+  background-color: transparent;
 }
 
 div.guessletter.present {

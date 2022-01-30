@@ -8,7 +8,7 @@ export function Enter(props) {
     return (
         <>
             <button
-                className="btn btn-dark"
+                className="btn btn-dark keyboard-button control"
                 onClick={handleClick}
             >
                 {"Enter"}

@@ -2,19 +2,20 @@ import React, { useState, useEffect } from "react";
 import { GuessResult } from './GuessResult';
 
 export function GuessResultsBoard(props) {
-    const [guesses, setGuesses] = useState([]);
+    const [guesses, setGuesses] = useState(props.guesses);
 
     useEffect(() => {
-        //console.log("setting guesses", props.guesses)
-        setGuesses(props.guesses);
-        //console.log(guesses);
-    }, [props.guesses])
+        if(typeof props.guesses !== "undefined" && props.guesses !== guesses)
+        {
+            setGuesses(props.guesses);
+        }
+    }, [props.guesses, guesses])
 
     return (
         <>
         {
             guesses.map((guess, i) => {
-                return <GuessResult key={guess.word} guess={guess} rowNum={i}/>;
+                return <GuessResult key={guess.word + i} guess={guess} rowNum={i}/>;
             })
         }
         </>

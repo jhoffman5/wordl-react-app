@@ -7,7 +7,7 @@ export function Letter(props) {
     useEffect(() => {
         if(props.availability !== availability) {
             setAvailability(props.availability);
-            console.log(props.availability)
+            
             if(props.availability === -1) {
                 setLetterClass("unavailable");
             } else if(props.availability === 1) {
@@ -22,7 +22,7 @@ export function Letter(props) {
 
     return (
         <button
-            className={`btn btn-dark keyboard-button ${letterClass} col`}
+            className={`btn btn-dark keyboard-button letter ${letterClass}`}
             onClick={() => props.addLetter(props.letter)}
         >
             {props.letter}

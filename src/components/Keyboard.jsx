@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Letter } from "./Letter";
+import { Enter } from "./Enter";
+import { Backspace } from "./Backspace";
 
 const letters = [ 
     {
@@ -105,33 +107,24 @@ const letters = [
     {
         letter: "m",
         availability: 0
-    }]
+    }
+]
 
 export function Keyboard(props) {
 
     const [letterObjs, setLetterObjs] = useState(letters);
 
-    const [scoring, setScoring] = useState(props.score);
-
     useEffect(() => {
-        if(props.score !== scoring){
-            setScoring(props.score)
-        }
-        
-        if(props.resetBoard)
+        if(typeof props.guesses !== "undefined")
         {
+            // reset all 'availabilites' to 0
             letterObjs.forEach((obj, i) => {
                 obj.availability = 0;
             })
-            props.didReset();
-        }
-    }, [scoring, props.score, props.resetBoard])
 
-    useEffect(() => {
-        if(typeof scoring !== 'undefined' && typeof scoring.score !== 'undefined') {
-            if(scoring.score.length === scoring.word.length) {
-                scoring.score.forEach((score, index) => {
-                    var letterObj = letterObjs.find(({ letter }) => letter === scoring.word.charAt(index))
+            props.guesses.forEach(guess => {
+                guess.score.forEach((score, index) => {
+                    var letterObj = letterObjs.find(({ letter }) => letter === guess.word.charAt(index))
 
                     if(score === 0) {
                         letterObj.availability = -1
@@ -145,23 +138,22 @@ export function Keyboard(props) {
                         letterObj.availability = 0
                     }
 
+                    setLetterObjs([...letterObjs]);
                 });
-
-                setLetterObjs([...letterObjs]);
-            }
+            });
         }
-    }, [scoring])
+    }, [props.guesses])
 
     return (
         <>
-                <div className="row">
+                <div className="row d-flex justify-content-center">
                 {
                     letterObjs.slice(0,10).map((object, i) => {
                         return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
                     })
                 }
                 </div>
-                <div className="row">
+                <div className="row d-flex justify-content-center">
                 {
                     letterObjs.slice(10,19).map((object, i) => {
                         return (
@@ -170,13 +162,15 @@ export function Keyboard(props) {
                     })
                 }
                 </div>
-                <div className="row">
+                <div className="row d-flex justify-content-center">
+                <Enter submit={() => props.submit()}/>
                 {
                     letterObjs.slice(19,26).map((object, i) => {
                         return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
                     })
                 }
-            </div>
+                <Backspace backspace={() => props.backspace()}/>
+                </div>
         </>
     );
 }

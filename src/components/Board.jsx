@@ -2,8 +2,6 @@ import React, { useEffect, useState} from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Keyboard } from "./Keyboard";
-import { Backspace } from "./Backspace";
-import { Enter } from "./Enter";
 import { GuessResultsBoard } from "./GuessResultsBoard";
 import { Menu } from "./Menu";
 
@@ -11,11 +9,9 @@ export function Board(props) {
     const [userInput, setUserInput] = useState("");
     const [userLength, setUserLength] = useState();
     const [guesses, setGuesses] = useState([]);
+    const [tempGuesses, setTempGuesses] = useState([]);
 
-    const [score, setScore] = useState();
-
-    const [doResetBoard, setDoResetBoard] = useState(false);
-
+    // set default mode to 5
     useEffect(() => {
         handleChangeMode(5)
     },[])
@@ -32,17 +28,15 @@ export function Board(props) {
                         score: response.data.scoring
                     };
 
-                    // console.log("changing Board score")
-                    setScore(newScore);
-                    setGuesses([...guesses, newScore]);
+                    var saveGuesses = [...guesses, newScore];
+
+                    //setScore(newScore);
                     setUserInput("");
+                    
+                    Cookies.set(userLength, JSON.stringify(saveGuesses), { expires: 7 });
 
-                    console.log(userLength);
-                    Cookies.set(userLength, JSON.stringify(guesses), { expires: 7 });
-                    console.log(JSON.parse(Cookies.get(5)));
-                    console.log(JSON.parse(Cookies.get(6)));
-                    console.log(JSON.parse(Cookies.get(7)))
-
+                    setGuesses(saveGuesses);
+                    setTempGuesses(saveGuesses);
                 }
             })
         }
@@ -50,9 +44,10 @@ export function Board(props) {
 
     //add letters to the user's input, only up to 5 chars
     const addLetterToInput = (letter) => {
-        console.log("board", letter);
         if(userInput.length < userLength) {
-            setUserInput(userInput + letter);
+            var longerWord = userInput + letter
+            setUserInput(longerWord);    
+            updateTemporaryGuessesWithTempWord(longerWord); 
         }
     }
 
@@ -65,17 +60,20 @@ export function Board(props) {
                 addLetterToInput(event.key);
             } else if (event.keyCode === 13) { 
                 // enter
-                handleSubmit();
+                handleSubmit(); 
             } else if (event.keyCode === 8) { 
                 // backspace
                 removeLetterFromInput();
-            }
+            }  
         }
     }
 
     //backspace function
     const removeLetterFromInput = () => {
-        setUserInput(userInput.slice(0, -1)); //remove last letter
+        var shortenInput = userInput.slice(0, -1); //remove last letter
+
+        setUserInput(shortenInput);
+        updateTemporaryGuessesWithTempWord(shortenInput);
     }
     
     //add event listener to handle keyboard inputs
@@ -87,36 +85,31 @@ export function Board(props) {
     }, [handleUserKeyboard])
 
     const handleChangeMode = (length) => {
+        // update to the new gamemode
         setUserLength(length);
-        
-        // reset the board to blank
-        setDoResetBoard(true);
+
+        setUserInput("");
         
         // get past guesses
         var pastGuessesForLength = JSON.parse(Cookies.get(length));
+
         setGuesses(pastGuessesForLength);
-        console.log(pastGuessesForLength)
+        setTempGuesses(pastGuessesForLength);
+    }
 
-        // format past guesses into a score obj
-        var resetScoreObj = {
-            word: pastGuessesForLength.map(guess => guess.word).join(""),
-            score: pastGuessesForLength.map(guess => guess.score).concat().flat()
-        }
-
-        // set the score object that will be passed to the child Keyboard.
-        // this will set all of the letters' values for the new current mode
-        setScore(resetScoreObj);
+    const updateTemporaryGuessesWithTempWord = (tempWord) => {
+        // Fill with 3's to give 'not-guessed' class to each letter's div
+        setTempGuesses([...guesses, { word: tempWord, score: Array(tempWord.length).fill(3)}]);    
     }
 
     return (
         <>
             <Menu handleChangeMode={(test) => handleChangeMode(test)}/>
-            <GuessResultsBoard guesses={guesses}/>
-            <Keyboard addLetter={(letter) => addLetterToInput(letter)} score={score} resetBoard={doResetBoard} didReset={() => setDoResetBoard(false)}/>
-            <Enter submit={() => handleSubmit()}/>
-            <Backspace backspace={() => removeLetterFromInput()}/>
-            <div>
-                {userInput.toUpperCase()}
+            <GuessResultsBoard guesses={tempGuesses}/>
+            <div className="container-fluid fixed-bottom d-flex justify-content-center">
+                <div className="row">
+                    <Keyboard addLetter={(letter) => addLetterToInput(letter)} guesses={tempGuesses} submit={() => handleSubmit()} backspace={() => removeLetterFromInput()}/>
+                </div>
             </div>
         </>
     );
