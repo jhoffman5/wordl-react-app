@@ -20,7 +20,7 @@ export function Menu(props) {
         <>
         <div id="menu-icons" className="row fixed-top">
             <div className='btn' onClick={() => console.log("open info page")}>
-                <i class="bi bi-info-circle icon-white"></i>
+                <i className="bi bi-info-circle icon-white"></i>
             </div>
             <div className='btn' onClick={() => showMenu()}>
                 <i className={`bi bi-gear-fill ${doShowMenuModal ? "icon-green" : "icon-white"}`}></i>

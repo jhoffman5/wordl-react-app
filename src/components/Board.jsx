@@ -4,17 +4,20 @@ import Cookies from "js-cookie";
 import { Keyboard } from "./Keyboard";
 import { GuessResultsBoard } from "./GuessResultsBoard";
 import { Menu } from "./Menu";
+import { BoardResultModal } from "./BoardResultModal";
 
 export function Board(props) {
     const [userInput, setUserInput] = useState("");
-    const [userLength, setUserLength] = useState();
+    const [userLength, setUserLength] = useState(5);
+    const [maxGuesses, setMaxGuesses] = useState();
+
     const [guesses, setGuesses] = useState([]);
     const [tempGuesses, setTempGuesses] = useState([]);
 
-    // set default mode to 5
-    useEffect(() => {
-        handleChangeMode(5)
-    },[])
+    const [isBoardDone, setIsBoardDone] = useState(false);
+
+    const d = new Date();
+    const date = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate() //yyyy-mm-dd
   
     //submit guess to the backend lambda
     const handleSubmit = (evt) => {
@@ -30,13 +33,52 @@ export function Board(props) {
 
                     var saveGuesses = [...guesses, newScore];
 
-                    //setScore(newScore);
-                    setUserInput("");
-                    
-                    Cookies.set(userLength, JSON.stringify(saveGuesses), { expires: 7 });
+                    Cookies.set(userLength.toString() + date, JSON.stringify(saveGuesses), { expires: 2 });
 
+                    //reset state
+                    setUserInput("");
                     setGuesses(saveGuesses);
                     setTempGuesses(saveGuesses);
+
+                    var playerDidWin = newScore.score.every(val => val === 2)
+
+                    if(saveGuesses.length == userLength + 1 || playerDidWin)
+                    {
+                        if(playerDidWin)
+                        {
+                            // add 
+                            var userObj = Cookies.get("user");
+
+                            if(typeof userObj === "undefined")
+                            {
+                                userObj = {
+                                    "5": {
+                                        "wins": 0,
+                                        "winsOnAttempt": Array(6).fill(0)
+                                    },
+                                    "6": {
+                                        "wins": 0,
+                                        "winsOnAttempt": Array(7).fill(0)
+                                    },
+                                    "7": {
+                                        "wins": 0,
+                                        "winsOnAttempt": Array(8).fill(0)
+                                    }
+                                }
+                            } else {
+                                userObj = JSON.parse(userObj);
+                            }
+                            
+                            userObj[userLength]["wins"] += 1;
+                            userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1] += 1;
+                            Cookies.set("user", JSON.stringify(userObj));
+                        } else
+                        {
+                            // do nothing to user
+                        }
+
+                        setIsBoardDone(true);
+                    }
                 }
             })
         }
@@ -44,27 +86,34 @@ export function Board(props) {
 
     //add letters to the user's input, only up to 5 chars
     const addLetterToInput = (letter) => {
-        if(userInput.length < userLength) {
+        if(userInput.length < userLength && guesses.length < maxGuesses) {
             var longerWord = userInput + letter
             setUserInput(longerWord);    
             updateTemporaryGuessesWithTempWord(longerWord); 
         }
     }
 
+    useEffect(() => {
+        handleChangeMode(userLength)
+        setMaxGuesses(userLength + 1);
+    }, [userLength])
 
     //handle letters, backspace and enter
     const handleUserKeyboard = (event) => {
-        if(event.key && event.keyCode) {
-            if((event.keyCode >= 65 && event.keyCode <= 95)) {
-                // letters
-                addLetterToInput(event.key);
-            } else if (event.keyCode === 13) { 
-                // enter
-                handleSubmit(); 
-            } else if (event.keyCode === 8) { 
-                // backspace
-                removeLetterFromInput();
-            }  
+        if(!isBoardDone)
+        {
+            if(event.key && event.keyCode) {
+                if((event.keyCode >= 65 && event.keyCode <= 95)) {
+                    // letters
+                    addLetterToInput(event.key);
+                } else if (event.keyCode === 13) { 
+                    // enter
+                    handleSubmit(); 
+                } else if (event.keyCode === 8) { 
+                    // backspace
+                    removeLetterFromInput();
+                }  
+            }
         }
     }
 
@@ -91,11 +140,27 @@ export function Board(props) {
         setUserInput("");
         
         // get past guesses
-        var pastGuessesForLength = JSON.parse(Cookies.get(length));
+        var cookie = Cookies.get(length.toString() + date);
+        if(cookie && typeof cookie !== "undefined")
+        {
+            var pastGuessesForLength = JSON.parse(cookie);
 
-        setGuesses(pastGuessesForLength);
-        setTempGuesses(pastGuessesForLength);
+            setGuesses(pastGuessesForLength);
+            setTempGuesses(pastGuessesForLength);
+        }
+        else
+        {
+            var pastGuessesForLength = [];
+
+            setGuesses(pastGuessesForLength);
+            setTempGuesses(pastGuessesForLength);
+        }
     }
+
+    useEffect(() => {
+        var isGameDone = guesses.filter(guess => guess.score.every(val => val === 2)).length > 0;
+        setIsBoardDone(isGameDone);
+    }, [guesses])
 
     const updateTemporaryGuessesWithTempWord = (tempWord) => {
         // Fill with 3's to give 'not-guessed' class to each letter's div
@@ -105,10 +170,11 @@ export function Board(props) {
     return (
         <>
             <Menu handleChangeMode={(test) => handleChangeMode(test)}/>
-            <GuessResultsBoard guesses={tempGuesses}/>
+            <GuessResultsBoard guesses={tempGuesses} length={userLength}/>
             <div className="keyboard">
                 <Keyboard addLetter={(letter) => addLetterToInput(letter)} guesses={tempGuesses} submit={() => handleSubmit()} backspace={() => removeLetterFromInput()}/>
             </div>
+            <BoardResultModal show={isBoardDone}/>
         </>
     );
 }

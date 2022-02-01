@@ -20,6 +20,8 @@ Black: #121213
 .keyboard {
   margin: 0 8px;
   user-select: none;
+  position: fixed;
+  bottom: 0;
 }
 
 .keyboard-row {
@@ -113,6 +115,10 @@ div.guessletter.present {
 
 div.guessletter.correct {
   background-color: #538d4e;
+}
+
+div.guessletter.not-submitted {
+  border: 1px white solid;
 }
 
 @media (prefers-reduced-motion: no-preference) {
