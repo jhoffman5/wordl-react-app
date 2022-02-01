@@ -106,10 +106,8 @@ export function Board(props) {
         <>
             <Menu handleChangeMode={(test) => handleChangeMode(test)}/>
             <GuessResultsBoard guesses={tempGuesses}/>
-            <div className="container-fluid fixed-bottom d-flex justify-content-center">
-                <div className="row">
-                    <Keyboard addLetter={(letter) => addLetterToInput(letter)} guesses={tempGuesses} submit={() => handleSubmit()} backspace={() => removeLetterFromInput()}/>
-                </div>
+            <div className="keyboard">
+                <Keyboard addLetter={(letter) => addLetterToInput(letter)} guesses={tempGuesses} submit={() => handleSubmit()} backspace={() => removeLetterFromInput()}/>
             </div>
         </>
     );

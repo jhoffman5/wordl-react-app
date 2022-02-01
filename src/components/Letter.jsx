@@ -21,11 +21,11 @@ export function Letter(props) {
     }, [props.availability, props.letter, availability])
 
     return (
-        <button
-            className={`btn btn-dark keyboard-button letter ${letterClass}`}
+        <div
+            className={`keyboard-button letter ${letterClass}`}
             onClick={() => props.addLetter(props.letter)}
         >
             {props.letter}
-        </button>
+        </div>
     );
 }

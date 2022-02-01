@@ -17,32 +17,66 @@ Black: #121213
   pointer-events: none;
 }
 
-.btn.keyboard-button {
-  background-color: #818384;
-  display: inline-block;
-  width: 36px;
-  height: 36px;
+.keyboard {
+  margin: 0 8px;
+  user-select: none;
 }
-  .btn.keyboard-button.letter {
+
+.keyboard-row {
+  display: flex;
+  width: 100%;
+  margin: 0 auto 8px;
+  touch-action: manipulation;
+}
+
+.keyboard-button {
+  background-color: #818384;
+  color: white;
+  font-family: inherit;
+  font-weight: bold;
+  border: 0;
+  padding: 0;
+  margin: 0 6px 0 0;
+  height: 58px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+}
+  .keyboard-button.letter {
     width: 36px;
     height: 36px;
   }
-  .btn.keyboard-button.control {
-    width: 72px;
-    height: 36px;
+  .keyboard-button.control {
+    flex: 1.5;
+    font-size: 12px;
   }
-  .btn.keyboard-button.unavailable {
+  .keyboard-button.unavailable {
     background-color: #3a3a3c;
   }
-  .btn.keyboard-button.present{
+  .keyboard-button.present{
     background-color: #b59f3b;
   }
-  .btn.keyboard-button.correct {
+  .keyboard-button.correct {
     background-color: #538d4e;
   }
 
+
+div.guess-board {
+  width: fit-content;
+  justify-self: center;
+  vertical-align: top;
+}
+
 div.guess-row {
-  justify-content: center;
+  justify-content: left;
 }
 
 div.guessletter {
@@ -129,4 +163,24 @@ div.guessletter.correct {
   top:50%;
   left:50%;
   transform: translate(-50%,-50%);
+}
+
+.icon-yellow {
+  color: #b59f3b;
+}
+
+.icon-green {
+  color: #538d4e;
+}
+
+.icon-dark-grey {
+  color: #3a3a3c;
+}
+
+.icon-light-grey {
+  color: #818384;
+}
+
+.icon-white {
+  color: #fff;
 }

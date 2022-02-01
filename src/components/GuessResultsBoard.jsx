@@ -7,12 +7,21 @@ export function GuessResultsBoard(props) {
     useEffect(() => {
         if(typeof props.guesses !== "undefined" && props.guesses !== guesses)
         {
-            setGuesses(props.guesses);
+            var newGuesses = props.guesses;
+
+            var newGuessObjs = Array(15).fill({
+                word: "     ",
+                score: [0,0,0,0,0]
+            })
+
+            newGuesses.push(...newGuessObjs);
+
+            setGuesses(newGuesses);
         }
     }, [props.guesses, guesses])
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid guess-board">
         {
             guesses.map((guess, i) => {
                 return <GuessResult key={guess.word + i} guess={guess} rowNum={i}/>;

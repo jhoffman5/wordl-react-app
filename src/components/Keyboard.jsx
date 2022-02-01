@@ -125,17 +125,16 @@ export function Keyboard(props) {
             props.guesses.forEach(guess => {
                 guess.score.forEach((score, index) => {
                     var letterObj = letterObjs.find(({ letter }) => letter === guess.word.charAt(index))
-
-                    if(score === 0) {
-                        letterObj.availability = -1
-                    } else if (score === 1) {
-                        if(letterObj.availability < 1) {
-                            letterObj.availability = 1
+                    if(letterObj){
+                        if(score === 0) {
+                            letterObj.availability = -1
+                        } else if (score === 1) {
+                            if(letterObj.availability < 1) {
+                                letterObj.availability = 1
+                            }
+                        } else if (score === 2) {
+                            letterObj.availability = 2;
                         }
-                    } else if (score === 2) {
-                        letterObj.availability = 2;
-                    } else {
-                        letterObj.availability = 0
                     }
 
                     setLetterObjs([...letterObjs]);
@@ -146,14 +145,14 @@ export function Keyboard(props) {
 
     return (
         <>
-                <div className="row d-flex justify-content-center">
+                <div className="keyboard-row">
                 {
                     letterObjs.slice(0,10).map((object, i) => {
                         return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
                     })
                 }
                 </div>
-                <div className="row d-flex justify-content-center">
+                <div className="keyboard-row">
                 {
                     letterObjs.slice(10,19).map((object, i) => {
                         return (
@@ -162,7 +161,7 @@ export function Keyboard(props) {
                     })
                 }
                 </div>
-                <div className="row d-flex justify-content-center">
+                <div className="keyboard-row">
                 <Enter submit={() => props.submit()}/>
                 {
                     letterObjs.slice(19,26).map((object, i) => {
