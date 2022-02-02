@@ -34,7 +34,7 @@ export function Menu(props) {
         <>
         <div id="menu-icons" className="row fixed-top">
             <div className='btn-group'>
-                <div className='btn' onClick={() => alert("Hey! Thanks for playing :)")}>
+                <div className='btn' onClick={() => alert("Hey! Thanks for playing :)\nClick on the gear to change modes or view stats.")}>
                     <i className="bi bi-info-circle icon-white"></i>
                 </div>
                 <div className='btn' onClick={() => toggleShowMenu()}>
@@ -89,14 +89,16 @@ export function Menu(props) {
                             </div>
                         </div>
                     </div>
+                    {/*
                     <h1>
                         Guess Distribution
                     </h1>
+                    */
+                    }
                     <div className="btn btn-primary" onClick={toggleShowMenu}>
                         Close Menu
                     </div>
                 </div>
-
             </div>
         </div>
         </>

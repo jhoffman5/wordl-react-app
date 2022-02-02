@@ -178,16 +178,25 @@ export function Board(props) {
         if(!isBoardDone)
         {
             if(event.key && event.keyCode) {
-                if((event.keyCode >= 65 && event.keyCode <= 95)) {
-                    // letters
-                    addLetterToInput(event.key);
-                } else if (event.keyCode === 13) { 
+                var key = event.key.toLowerCase();
+                if(key.length === 1)
+                {
+                    if(/^[a-z]$/i.test(key))
+                    {
+                        //letters
+                        addLetterToInput(key)
+                    }
+                }
+                else if(key === "enter")
+                {
                     // enter
                     handleSubmit(); 
-                } else if (event.keyCode === 8) { 
+                }
+                else if(key === "backspace")
+                {
                     // backspace
-                    removeLetterFromInput();
-                }  
+                    removeLetterFromInput();                    
+                }
             }
         }
     }
