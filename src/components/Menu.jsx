@@ -1,32 +1,48 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Cookies from "js-cookie";
 
 export function Menu(props) {
-    const [doShowMenuModal, setDoShowMenuModal] = useState(false);
-
-    const showMenu = () => {
-        setDoShowMenuModal(true);
-    }
-
-    const hideMenu = () => {
-        setDoShowMenuModal(false);
-    }
+    const {showMenu, toggleShowMenu, mode} = props;
+    const [userData, setUserData] = useState({});
 
     const handleModeBtnClick = (mode) => {
         props.handleChangeMode(mode);
-        hideMenu();
+    }
+
+    useEffect(() => {
+        if(showMenu) 
+        {
+            var userObj = Cookies.get("user");
+            if(typeof userObj !== "undefined")
+            {
+                setUserData(JSON.parse(userObj));
+            }
+        }
+    }, [showMenu]);
+
+    const getUserDataForMode = (field) => {
+        try
+        {
+            return userData[mode][field];
+        } catch (e) 
+        {
+            return "";
+        }
     }
 
     return (
         <>
         <div id="menu-icons" className="row fixed-top">
-            <div className='btn' onClick={() => console.log("open info page")}>
-                <i className="bi bi-info-circle icon-white"></i>
-            </div>
-            <div className='btn' onClick={() => showMenu()}>
-                <i className={`bi bi-gear-fill ${doShowMenuModal ? "icon-green" : "icon-white"}`}></i>
+            <div className='btn-group'>
+                <div className='btn' onClick={() => alert("Hey! Thanks for playing :)")}>
+                    <i className="bi bi-info-circle icon-white"></i>
+                </div>
+                <div className='btn' onClick={() => toggleShowMenu()}>
+                    <i className={`bi bi-gear-fill ${showMenu ? "icon-green" : "icon-white"}`}></i>
+                </div>
             </div>
         </div>
-        <div className={`modal ${doShowMenuModal ? 'd-block' : 'd-none'}`}>
+        <div className={`modal ${showMenu ? 'd-block' : 'd-none'}`}>
             <div className="modal-main">
 
                 <div className='container'>
@@ -50,7 +66,33 @@ export function Menu(props) {
                             </button>
                         </div>
                     </div>
-                    <div className="btn btn-primary" onClick={() => hideMenu()}>
+                    <div className='stats-container'>
+                        <h1>
+                            Statistics
+                        </h1>
+                        <div className='statistics'>
+                            <div className='statistic'>
+                                <div className='val'>{getUserDataForMode("played")}</div>
+                                <div className='label'>Played</div>
+                            </div>
+                            <div className='statistic'>
+                                <div className='val'>{isNaN((parseFloat(getUserDataForMode("wins")) / parseFloat(getUserDataForMode("played"))) * 100) ? 0 : Math.ceil((parseFloat(getUserDataForMode("wins")) / parseFloat(getUserDataForMode("played"))) * 100) }</div>
+                                <div className='label'>Win %</div>
+                            </div>
+                            <div className='statistic'>
+                                <div className='val'>{getUserDataForMode("streak")}</div>
+                                <div className='label'>Current Streak</div>
+                            </div>
+                            <div className='statistic'>
+                                <div className='val'>{getUserDataForMode("maxStreak")}</div>
+                                <div className='label'>Max Streak</div>
+                            </div>
+                        </div>
+                    </div>
+                    <h1>
+                        Guess Distribution
+                    </h1>
+                    <div className="btn btn-primary" onClick={toggleShowMenu}>
                         Close Menu
                     </div>
                 </div>
