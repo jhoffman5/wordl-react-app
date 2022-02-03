@@ -7,7 +7,6 @@ import { Menu } from "./Menu";
 import { BoardResultModal } from "./BoardResultModal";
 
 export function Board(props) {
-    const [userData, setUserData] = useState({});
 
     const [userInput, setUserInput] = useState("");
     const [userLength, setUserLength] = useState(5);
@@ -16,7 +15,6 @@ export function Board(props) {
     const [guesses, setGuesses] = useState([]);
     const [tempGuesses, setTempGuesses] = useState([]);
 
-    const [isBoardDone, setIsBoardDone] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
 
     const [date, setDate] = useState(new Date());
@@ -40,12 +38,6 @@ export function Board(props) {
         setDate(actualDate);
     }
 
-    useEffect(() => {
-        const timerId = setInterval(refreshClock, 1000);
-        return function cleanup() {
-            clearInterval(timerId);
-        };
-    }, []);
 
     function getUserDateString(){
         const offset = date.getTimezoneOffset();
@@ -103,8 +95,6 @@ export function Board(props) {
 
                         
                         Cookies.set("user", JSON.stringify(userObj), { expires: 7 });
-
-                        setIsBoardDone(true);
                     }
                 }
             }).catch((err) => {
@@ -175,8 +165,11 @@ export function Board(props) {
 
     //handle letters, backspace and enter
     const handleUserKeyboard = (event) => {
-        if(!isBoardDone)
-        {
+        var didPlayerWin = guesses.at(-1).score.every(val => val === 2);
+        var isBoardFull = (guesses.length >= userLength + 1);
+
+        // check if board is full of guesses, or the player has won
+        if(!(didPlayerWin || isBoardFull))
             if(event.key && event.keyCode) {
                 var key = event.key.toLowerCase();
                 if(key.length === 1)
@@ -198,7 +191,6 @@ export function Board(props) {
                     removeLetterFromInput();                    
                 }
             }
-        }
     }
 
     //backspace function
@@ -208,14 +200,7 @@ export function Board(props) {
         setUserInput(shortenInput);
         updateTemporaryGuessesWithTempWord(shortenInput);
     }
-    
-    //add event listener to handle keyboard inputs
-    useEffect(() => {
-        document.addEventListener("keydown", handleUserKeyboard, false);
-        return () => {
-            document.removeEventListener("keydown", handleUserKeyboard);
-        };
-    }, [handleUserKeyboard])
+
 
     /* START - Menu methods */
     const handleChangeMode = (length) => {
@@ -259,13 +244,23 @@ export function Board(props) {
         setTempGuesses([...guesses, { word: tempWord, score: Array(tempWord.length).fill(3)}]);    
     }
 
+    //add event listener to handle keyboard inputs
+    useEffect(() => {
+        window.addEventListener("keydown", handleUserKeyboard, false);
+        const timerId = setInterval(refreshClock, 1000);
+        return function cleanup() {
+            clearInterval(timerId);
+            window.removeEventListener("keydown", handleUserKeyboard)
+        };
+    }, [refreshClock, handleUserKeyboard]);
+
 
     return (
         <>
             <Menu handleChangeMode={handleChangeMode} mode={userLength} toggleShowMenu={toggleShowMenu} showMenu={showMenu}/>
             <GuessResultsBoard guesses={tempGuesses} length={userLength}/>
             <div className="keyboard">
-                <Keyboard addLetter={(letter) => addLetterToInput(letter)} guesses={tempGuesses} submit={() => handleSubmit()} backspace={() => removeLetterFromInput()}/>
+                <Keyboard addLetter={addLetterToInput} guesses={tempGuesses} submit={handleSubmit} backspace={removeLetterFromInput}/>
             </div>
         </>
     );
