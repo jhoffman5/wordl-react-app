@@ -51,7 +51,7 @@ export function Board(props) {
         //check if userInput has already been guessed
         if(!(guesses.filter(e => e.word === userInput).length > 0) && userInput && userInput.length === userLength)
         {
-            axios.get(`https://0kvvec0kt8.execute-api.us-east-1.amazonaws.com/date/${getUserDateString()}/length/${userLength}/word/${userInput}`).then((response) => {
+            axios.get(`https://0kvvec0kt8.execute-api.us-east-1.amazonaws.com/date/${getUserDateString()}/length/${userLength}/word/${userInput}`).then((response) => {  
                 if(response.status >= 200 && response.status < 400) {
                     var newScore = {
                         word: userInput,
@@ -75,18 +75,69 @@ export function Board(props) {
 
                         if(playerDidWin)
                         {
-                            userObj[userLength]["wins"] = !isNaN(parseInt(userObj[userLength]["wins"])) ? userObj[userLength]["wins"] + 1 : 1;
-                            userObj[userLength]["streak"] = !isNaN(parseInt(userObj[userLength]["streak"])) ? userObj[userLength]["streak"] + 1 : 1;
-                            userObj[userLength]["played"] = !isNaN(parseInt(userObj[userLength]["played"])) ? userObj[userLength]["played"] + 1 : 1;
-
-                            userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1] = !isNaN(parseInt(userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1])) ? userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1] + 1 : 1;
-
-                            if(userObj[userLength]["streak"] > userObj[userLength]["maxStreak"])
+                            if(!(userLength in userObj))
                             {
-                                userObj[userLength]["maxStreak"] = userObj[userLength]["streak"];
+                                userObj[userLength] = {
+                                    "wins": 0,
+                                    "streak": 0,
+                                    "maxStreak": 0,
+                                    "played": 0,
+                                    "winsOnAttempt": Array(userLength + 1).fill(0)
+                                }
+                            } else {
+                                if(!('wins' in userObj[userLength]))
+                                {
+                                    userObj[userLength]["wins"] = 0;                                   
+                                }
+                                if(!('streak' in userObj[userLength]))
+                                {
+                                    userObj[userLength]["wins"] = 0;
+                                }
+                                if(!('played' in userObj[userLength]))
+                                {
+                                    userObj[userLength]["wins"] = 0;
+                                }
+                                if(!('winsOnAttempt' in userObj[userLength]))
+                                {
+                                    userObj[userLength]["wins"] = Array(userLength + 1).fill(0);                                  
+                                }
+                                if(!('maxStreak' in userObj[userLength]))
+                                {
+                                    userObj[userLength]["wins"] = 0;
+                                }
+
+                                userObj[userLength]["wins"] = !isNaN(parseInt(userObj[userLength]["wins"])) ? userObj[userLength]["wins"] + 1 : 1;
+                                userObj[userLength]["streak"] = !isNaN(parseInt(userObj[userLength]["streak"])) ? userObj[userLength]["streak"] + 1 : 1;
+                                userObj[userLength]["played"] = !isNaN(parseInt(userObj[userLength]["played"])) ? userObj[userLength]["played"] + 1 : 1;
+
+                                userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1] = !isNaN(parseInt(userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1])) ? userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1] + 1 : 1;
+
+                                if(userObj[userLength]["streak"] > userObj[userLength]["maxStreak"])
+                                {
+                                    userObj[userLength]["maxStreak"] = userObj[userLength]["streak"];
+                                }
                             }
                         } else
                         {
+                            if(!(userLength in userObj))
+                            {
+                                userObj[userLength] = {
+                                    "wins": 0,
+                                    "streak": 0,
+                                    "maxStreak": 0,
+                                    "played": 0,
+                                    "winsOnAttempt": Array(userLength + 1).fill(0)
+                                }
+                            } else {
+                                if(!('played' in userObj[userLength]))
+                                {
+                                    userObj[userLength]["wins"] = 0;
+                                }
+                                if(!('streak' in userObj[userLength]))
+                                {
+                                    userObj[userLength]["wins"] = 0;
+                                } 
+                            }
                             userObj[userLength]["played"] += 1;
                             userObj[userLength]["streak"] = 0;
 
@@ -305,7 +356,7 @@ export function Board(props) {
     return (
         <>
         <div className="game-container">
-            <Menu guesses={guesses} handleChangeMode={handleChangeMode} mode={userLength} toggleShowMenu={toggleShowMenu} showMenu={showMenu}/>
+            <Menu dateString={getUserDateString()} guesses={guesses} handleChangeMode={handleChangeMode} mode={userLength} toggleShowMenu={toggleShowMenu} showMenu={showMenu}/>
             <div className="board-container">
                 <GuessResultsBoard guesses={tempGuesses} length={userLength}/>
             </div>

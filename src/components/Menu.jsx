@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Cookies from "js-cookie";
 
 export function Menu(props) {
-    const {showMenu, toggleShowMenu, mode, guesses} = props;
+    const {showMenu, toggleShowMenu, mode, guesses, dateString} = props;
     const [userData, setUserData] = useState({});
 
     const handleModeBtnClick = (mode) => {
@@ -17,6 +17,7 @@ export function Menu(props) {
             if(typeof userObj === "undefined")
             {
                 userObj = {
+                    "date": dateString,
                     "5": {
                         "wins": 0,
                         "streak": 0,
@@ -45,6 +46,7 @@ export function Menu(props) {
         } catch (e) {
             console.error(e);
             userObj = {
+                "date": dateString,
                 "5": {
                     "wins": 0,
                     "streak": 0,
