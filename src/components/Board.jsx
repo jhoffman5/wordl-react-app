@@ -123,11 +123,43 @@ export function Board(props) {
     }
 
     function getUserFromCookie() {
-        var userObj = Cookies.get("user");
+        console.log("getting")
+        var userObj = {};
+        try{
+            userObj = Cookies.get("user");
 
-        if(typeof userObj === "undefined")
-        {
-            userObj = {        
+            if(typeof userObj === "undefined")
+            {
+                userObj = {    
+                    "date": getUserDateString(),
+                    "5": {
+                        "wins": 0,
+                        "streak": 0,
+                        "maxStreak": 0,
+                        "played": 0,
+                        "winsOnAttempt": Array(6).fill(0)
+                    },
+                    "6": {
+                        "wins": 0,
+                        "streak": 0,
+                        "maxStreak": 0,
+                        "played": 0,
+                        "winsOnAttempt": Array(7).fill(0)
+                    },
+                    "7": {
+                        "wins": 0,
+                        "streak": 0,
+                        "maxStreak": 0,
+                        "played": 0,
+                        "winsOnAttempt": Array(8).fill(0)
+                    }
+                }
+            } else {
+                userObj = JSON.parse(userObj);
+            }
+        } catch (e) {
+            console.error(e);
+            Cookies.set("user", JSON.stringify({        
                 "date": getUserDateString(),
                 "5": {
                     "wins": 0,
@@ -150,9 +182,7 @@ export function Board(props) {
                     "played": 0,
                     "winsOnAttempt": Array(8).fill(0)
                 }
-            }
-        } else {
-            userObj = JSON.parse(userObj);
+            }))
         }
 
         return userObj;
@@ -165,9 +195,9 @@ export function Board(props) {
 
     //handle letters, backspace and enter
     const handleUserKeyboard = (event) => {
-        var didPlayerWin = typeof guesses !== "undefined" ? false : guesses.at(-1).score.every(val => val === 2);
-        var isBoardFull = typeof guesses !== "undefined" ? false : (guesses.length >= userLength + 1);
-
+        var didPlayerWin = (typeof guesses !== "undefined" && guesses.length > 0) ? guesses.at(-1).score.every(val => val === 2) : false;
+        var isBoardFull = (typeof guesses !== "undefined" && guesses.length > 0) ? (guesses.length >= userLength + 1) : false;
+        
         // check if board is full of guesses, or the player has won
         if(!(didPlayerWin || isBoardFull))
             if(event.key && event.keyCode) {
