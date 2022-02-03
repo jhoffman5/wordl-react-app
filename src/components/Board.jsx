@@ -79,12 +79,14 @@ export function Board(props) {
                                 if(!(userLength in userObj))
                                 {
                                     userObj[userLength] = {
-                                        "wins": 0,
-                                        "streak": 0,
-                                        "maxStreak": 0,
-                                        "played": 0,
+                                        "wins": 1,
+                                        "streak": 1,
+                                        "maxStreak": 1,
+                                        "played": 1,
                                         "winsOnAttempt": Array(userLength + 1).fill(0)
                                     }
+
+                                    userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1] = !isNaN(parseInt(userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1])) ? userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1] + 1 : 1;
                                 } else {
                                     if(!('wins' in userObj[userLength]))
                                     {
