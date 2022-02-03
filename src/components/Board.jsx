@@ -245,7 +245,12 @@ export function Board(props) {
         var cookie = Cookies.get(length.toString() + getUserDateString());
         if(cookie && typeof cookie !== "undefined")
         {
-            var pastGuessesForLength = JSON.parse(cookie);
+            var pastGuessesForLength = [];
+            try{
+                var pastGuessesForLength = JSON.parse(cookie);
+            } catch (e) {
+                console.error(e);
+            }
 
             setGuesses(pastGuessesForLength);
             setTempGuesses(pastGuessesForLength);
