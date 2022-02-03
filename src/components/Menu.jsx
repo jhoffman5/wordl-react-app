@@ -9,13 +9,77 @@ export function Menu(props) {
         props.handleChangeMode(mode);
     }
 
+    function getUserFromCookie() {
+        var userObj = {};
+        try{
+            userObj = Cookies.get("user");
+
+            if(typeof userObj === "undefined")
+            {
+                userObj = {
+                    "5": {
+                        "wins": 0,
+                        "streak": 0,
+                        "maxStreak": 0,
+                        "played": 0,
+                        "winsOnAttempt": Array(6).fill(0)
+                    },
+                    "6": {
+                        "wins": 0,
+                        "streak": 0,
+                        "maxStreak": 0,
+                        "played": 0,
+                        "winsOnAttempt": Array(7).fill(0)
+                    },
+                    "7": {
+                        "wins": 0,
+                        "streak": 0,
+                        "maxStreak": 0,
+                        "played": 0,
+                        "winsOnAttempt": Array(8).fill(0)
+                    }
+                }
+            } else {
+                userObj = JSON.parse(userObj);
+            }
+        } catch (e) {
+            console.error(e);
+            userObj = {
+                "5": {
+                    "wins": 0,
+                    "streak": 0,
+                    "maxStreak": 0,
+                    "played": 0,
+                    "winsOnAttempt": Array(6).fill(0)
+                },
+                "6": {
+                    "wins": 0,
+                    "streak": 0,
+                    "maxStreak": 0,
+                    "played": 0,
+                    "winsOnAttempt": Array(7).fill(0)
+                },
+                "7": {
+                    "wins": 0,
+                    "streak": 0,
+                    "maxStreak": 0,
+                    "played": 0,
+                    "winsOnAttempt": Array(8).fill(0)
+                }
+            }
+            Cookies.set("user", JSON.stringify(userObj))
+        }
+
+        return userObj;
+    }
+
     useEffect(() => {
         if(showMenu) 
         {
-            var userObj = Cookies.get("user");
+            var userObj = getUserFromCookie();
             if(typeof userObj !== "undefined")
             {
-                setUserData(JSON.parse(userObj));
+                setUserData(userObj);
             }
         }
     }, [showMenu]);

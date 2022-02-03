@@ -158,7 +158,8 @@ export function Board(props) {
             }
         } catch (e) {
             console.error(e);
-            Cookies.set("user", JSON.stringify({        
+
+            userObj = {       
                 "date": getUserDateString(),
                 "5": {
                     "wins": 0,
@@ -181,7 +182,9 @@ export function Board(props) {
                     "played": 0,
                     "winsOnAttempt": Array(8).fill(0)
                 }
-            }))
+            }
+
+            Cookies.set("user", JSON.stringify(userObj))
         }
 
         return userObj;
