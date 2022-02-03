@@ -123,7 +123,6 @@ export function Board(props) {
     }
 
     function getUserFromCookie() {
-        console.log("getting")
         var userObj = {};
         try{
             userObj = Cookies.get("user");
@@ -197,7 +196,7 @@ export function Board(props) {
     const handleUserKeyboard = (event) => {
         var didPlayerWin = (typeof guesses !== "undefined" && guesses.length > 0) ? guesses.at(-1).score.every(val => val === 2) : false;
         var isBoardFull = (typeof guesses !== "undefined" && guesses.length > 0) ? (guesses.length >= userLength + 1) : false;
-        
+
         // check if board is full of guesses, or the player has won
         if(!(didPlayerWin || isBoardFull))
             if(event.key && event.keyCode) {
