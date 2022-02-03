@@ -217,5 +217,3 @@ export function Menu(props) {
         </>
     )
 }
-
-//() => navigator.clipboard.writeText(getSharableText())

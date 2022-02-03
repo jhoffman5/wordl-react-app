@@ -125,7 +125,7 @@ export function Board(props) {
     function getUserFromCookie() {
         var userObj = {};
         try{
-            userObj = Cookies.get("user");
+            var userString = Cookies.get("user");
 
             if(typeof userObj === "undefined")
             {
@@ -153,8 +153,8 @@ export function Board(props) {
                         "winsOnAttempt": Array(8).fill(0)
                     }
                 }
-            } else {
-                userObj = JSON.parse(userObj);
+            } else if(isJsonString(userString)) {
+                userObj = JSON.parse(userString);
             }
         } catch (e) {
             console.error(e);
@@ -233,6 +233,15 @@ export function Board(props) {
         updateTemporaryGuessesWithTempWord(shortenInput);
     }
 
+    const isJsonString = (str) => {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+
 
     /* START - Menu methods */
     const handleChangeMode = (length) => {
@@ -243,13 +252,14 @@ export function Board(props) {
         
         // get past guesses
         var cookie = Cookies.get(length.toString() + getUserDateString());
-        if(cookie && typeof cookie !== "undefined")
+        if(cookie && typeof cookie !== "undefined" && isJsonString(cookie))
         {
             var pastGuessesForLength = [];
             try{
                 var pastGuessesForLength = JSON.parse(cookie);
             } catch (e) {
                 console.error(e);
+                Cookies.set(length.toString() + getUserDateString(), []);
             }
 
             setGuesses(pastGuessesForLength);
