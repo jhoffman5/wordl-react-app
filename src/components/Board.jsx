@@ -53,102 +53,108 @@ export function Board(props) {
         {
             axios.get(`https://0kvvec0kt8.execute-api.us-east-1.amazonaws.com/date/${getUserDateString()}/length/${userLength}/word/${userInput}`).then((response) => {  
                 if(response.status >= 200 && response.status < 400) {
-                    var newScore = {
-                        word: userInput,
-                        score: response.data.scoring
-                    };
+                    try{
+                        var newScore = {
+                            word: userInput,
+                            score: response.data.scoring
+                        };
 
-                    var saveGuesses = [...guesses, newScore];
+                        var saveGuesses = [...guesses, newScore];
 
-                    Cookies.set(userLength.toString() + getUserDateString(), JSON.stringify(saveGuesses), { expires: 2 });
+                        Cookies.set(userLength.toString() + getUserDateString(), JSON.stringify(saveGuesses), { expires: 2 });
 
-                    //reset state
-                    setUserInput("");
-                    setGuesses(saveGuesses);
-                    setTempGuesses(saveGuesses);
+                        //reset state
+                        setUserInput("");
+                        setGuesses(saveGuesses);
+                        setTempGuesses(saveGuesses);
 
-                    var playerDidWin = newScore.score.every(val => val === 2)
+                        var playerDidWin = newScore.score.every(val => val === 2)
 
-                    if(saveGuesses.length === userLength + 1 || playerDidWin)
-                    {
-                        var userObj = getUserFromCookie();
-
-                        if(playerDidWin)
+                        if(saveGuesses.length === userLength + 1 || playerDidWin)
                         {
-                            if(!(userLength in userObj))
+                            var userObj = getUserFromCookie();
+
+                            if(playerDidWin)
                             {
-                                userObj[userLength] = {
-                                    "wins": 0,
-                                    "streak": 0,
-                                    "maxStreak": 0,
-                                    "played": 0,
-                                    "winsOnAttempt": Array(userLength + 1).fill(0)
-                                }
-                            } else {
-                                if(!('wins' in userObj[userLength]))
+                                if(!(userLength in userObj))
                                 {
-                                    userObj[userLength]["wins"] = 0;                                   
-                                }
-                                if(!('streak' in userObj[userLength]))
-                                {
-                                    userObj[userLength]["wins"] = 0;
-                                }
-                                if(!('played' in userObj[userLength]))
-                                {
-                                    userObj[userLength]["wins"] = 0;
-                                }
-                                if(!('winsOnAttempt' in userObj[userLength]))
-                                {
-                                    userObj[userLength]["wins"] = Array(userLength + 1).fill(0);                                  
-                                }
-                                if(!('maxStreak' in userObj[userLength]))
-                                {
-                                    userObj[userLength]["wins"] = 0;
-                                }
+                                    userObj[userLength] = {
+                                        "wins": 0,
+                                        "streak": 0,
+                                        "maxStreak": 0,
+                                        "played": 0,
+                                        "winsOnAttempt": Array(userLength + 1).fill(0)
+                                    }
+                                } else {
+                                    if(!('wins' in userObj[userLength]))
+                                    {
+                                        userObj[userLength]["wins"] = 0;                                   
+                                    }
+                                    if(!('streak' in userObj[userLength]))
+                                    {
+                                        userObj[userLength]["wins"] = 0;
+                                    }
+                                    if(!('played' in userObj[userLength]))
+                                    {
+                                        userObj[userLength]["wins"] = 0;
+                                    }
+                                    if(!('winsOnAttempt' in userObj[userLength]))
+                                    {
+                                        userObj[userLength]["wins"] = Array(userLength + 1).fill(0);                                  
+                                    }
+                                    if(!('maxStreak' in userObj[userLength]))
+                                    {
+                                        userObj[userLength]["wins"] = 0;
+                                    }
 
-                                userObj[userLength]["wins"] = !isNaN(parseInt(userObj[userLength]["wins"])) ? userObj[userLength]["wins"] + 1 : 1;
-                                userObj[userLength]["streak"] = !isNaN(parseInt(userObj[userLength]["streak"])) ? userObj[userLength]["streak"] + 1 : 1;
-                                userObj[userLength]["played"] = !isNaN(parseInt(userObj[userLength]["played"])) ? userObj[userLength]["played"] + 1 : 1;
+                                    userObj[userLength]["wins"] = !isNaN(parseInt(userObj[userLength]["wins"])) ? userObj[userLength]["wins"] + 1 : 1;
+                                    userObj[userLength]["streak"] = !isNaN(parseInt(userObj[userLength]["streak"])) ? userObj[userLength]["streak"] + 1 : 1;
+                                    userObj[userLength]["played"] = !isNaN(parseInt(userObj[userLength]["played"])) ? userObj[userLength]["played"] + 1 : 1;
 
-                                userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1] = !isNaN(parseInt(userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1])) ? userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1] + 1 : 1;
+                                    userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1] = !isNaN(parseInt(userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1])) ? userObj[userLength]["winsOnAttempt"][saveGuesses.length - 1] + 1 : 1;
 
-                                if(userObj[userLength]["streak"] > userObj[userLength]["maxStreak"])
-                                {
-                                    userObj[userLength]["maxStreak"] = userObj[userLength]["streak"];
+                                    if(userObj[userLength]["streak"] > userObj[userLength]["maxStreak"])
+                                    {
+                                        userObj[userLength]["maxStreak"] = userObj[userLength]["streak"];
+                                    }
                                 }
-                            }
-                        } else
-                        {
-                            if(!(userLength in userObj))
+                            } else
                             {
-                                userObj[userLength] = {
-                                    "wins": 0,
-                                    "streak": 0,
-                                    "maxStreak": 0,
-                                    "played": 0,
-                                    "winsOnAttempt": Array(userLength + 1).fill(0)
-                                }
-                            } else {
-                                if(!('played' in userObj[userLength]))
+                                if(!(userLength in userObj))
                                 {
-                                    userObj[userLength]["wins"] = 0;
+                                    userObj[userLength] = {
+                                        "wins": 0,
+                                        "streak": 0,
+                                        "maxStreak": 0,
+                                        "played": 0,
+                                        "winsOnAttempt": Array(userLength + 1).fill(0)
+                                    }
+                                } else {
+                                    if(!('played' in userObj[userLength]))
+                                    {
+                                        userObj[userLength]["wins"] = 0;
+                                    }
+                                    if(!('streak' in userObj[userLength]))
+                                    {
+                                        userObj[userLength]["wins"] = 0;
+                                    } 
                                 }
-                                if(!('streak' in userObj[userLength]))
-                                {
-                                    userObj[userLength]["wins"] = 0;
-                                } 
-                            }
-                            userObj[userLength]["played"] += 1;
-                            userObj[userLength]["streak"] = 0;
+                                userObj[userLength]["played"] += 1;
+                                userObj[userLength]["streak"] = 0;
 
-                            getActualWord();
+                                getActualWord();
+                            }
+
+                            
+                            Cookies.set("user", JSON.stringify(userObj), { expires: 7 });
                         }
-
-                        
-                        Cookies.set("user", JSON.stringify(userObj), { expires: 7 });
+                    } catch (err) {
+                        alert(err.message);
                     }
                 }
             }).catch((err) => {
+                alert(err.message)
+                alert(JSON.stringify(err));
                 alert(`Sorry, but ${userInput} is not a word\nOr at least I don't think it is...`)
             })
         }
