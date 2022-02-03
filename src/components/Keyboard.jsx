@@ -145,31 +145,33 @@ export function Keyboard(props) {
 
     return (
         <>
-                <div className="keyboard-row">
-                {
-                    letterObjs.slice(0,10).map((object, i) => {
-                        return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
-                    })
-                }
-                </div>
-                <div className="keyboard-row">
-                {
-                    letterObjs.slice(10,19).map((object, i) => {
-                        return (
-                            <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
-                        );
-                    })
-                }
-                </div>
-                <div className="keyboard-row">
-                <Enter submit={() => props.submit()}/>
-                {
-                    letterObjs.slice(19,26).map((object, i) => {
-                        return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
-                    })
-                }
-                <Backspace backspace={() => props.backspace()}/>
-                </div>
+        <div className="keyboard">
+            <div className="keyboard-row">
+            {
+                letterObjs.slice(0,10).map((object, i) => {
+                    return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
+                })
+            }
+            </div>
+            <div className="keyboard-row">
+            {
+                letterObjs.slice(10,19).map((object, i) => {
+                    return (
+                        <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
+                    );
+                })
+            }
+            </div>
+            <div className="keyboard-row">
+            <Enter submit={() => props.submit()}/>
+            {
+                letterObjs.slice(19,26).map((object, i) => {
+                    return <Letter key={object.letter} availability={object.availability} letter={object.letter} addLetter={() => props.addLetter(object.letter)}/>
+                })
+            }
+            <Backspace backspace={() => props.backspace()}/>
+            </div>
+        </div>
         </>
     );
 }

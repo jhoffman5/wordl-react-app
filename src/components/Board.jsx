@@ -257,11 +257,15 @@ export function Board(props) {
 
     return (
         <>
+        <div className="game-container">
             <Menu handleChangeMode={handleChangeMode} mode={userLength} toggleShowMenu={toggleShowMenu} showMenu={showMenu}/>
-            <GuessResultsBoard guesses={tempGuesses} length={userLength}/>
-            <div className="keyboard">
+            <div className="board-container">
+                <GuessResultsBoard guesses={tempGuesses} length={userLength}/>
+            </div>
+            <div className="keyboard-container">
                 <Keyboard addLetter={addLetterToInput} guesses={tempGuesses} submit={handleSubmit} backspace={removeLetterFromInput}/>
             </div>
+        </div>
         </>
     );
 }

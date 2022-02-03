@@ -40,7 +40,7 @@ export function GuessResultsBoard(props) {
     }, [guesses])
 
     return (
-        <div className="container-fluid guess-board">
+        <div className="guess-board">
         {guessRows}
         </div>
     );

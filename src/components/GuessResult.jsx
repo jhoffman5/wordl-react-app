@@ -12,11 +12,11 @@ export function GuessResult(props) {
 
     return (
         <>
-        <div className="row guess-row">
+        <div className="guess-row">
         {
             guess.word.split('').map((char, i) => {   
                 return (
-                <div key={props.rowNum.toString() + char + i.toString()} className={`col guessletter ${guess.score[i] === 0 ? '' : guess.score[i] === 2 ? 'correct' : guess.score[i] === 1 ? 'present' : 'not-submitted'}`}>
+                <div key={props.rowNum.toString() + char + i.toString()} className={`guessletter ${guess.score[i] === 0 ? '' : guess.score[i] === 2 ? 'correct' : guess.score[i] === 1 ? 'present' : 'not-submitted'}`}>
                     {char}
                 </div>
                 );

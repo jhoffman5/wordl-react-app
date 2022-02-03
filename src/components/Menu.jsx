@@ -32,7 +32,7 @@ export function Menu(props) {
 
     return (
         <>
-        <div id="menu-icons" className="row fixed-top">
+        <div id="menu-icons" className="menu-container">
             <div className='btn-group'>
                 <div className='btn' onClick={() => alert("Hey! Thanks for playing :)\nClick on the gear to change modes or view stats.")}>
                     <i className="bi bi-info-circle icon-white"></i>
