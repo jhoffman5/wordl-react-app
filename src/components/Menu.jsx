@@ -97,7 +97,7 @@ export function Menu(props) {
     }
 
     const isGameSharable = () => {
-        var didPlayerWin = (typeof guesses !== "undefined" && guesses.length > 0) ? guesses.at(-1).score.every(val => val === 2) : false;
+        var didPlayerWin = (typeof guesses !== "undefined" && guesses.length > 0) ? guesses[guesses.length - 1].score.every(val => val === 2) : false;
         var isBoardFull = (typeof guesses !== "undefined" && guesses.length > 0) ? (guesses.length >= mode + 1) : false;
 
         // check if board is full of guesses, or the player has won

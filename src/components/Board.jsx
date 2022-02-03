@@ -144,17 +144,14 @@ export function Board(props) {
 
                                 getActualWord();
                             }
-
                             
                             Cookies.set("user", JSON.stringify(userObj), { expires: 7 });
                         }
                     } catch (err) {
-                        alert(err.message);
+                        alert("There was an error processing the response.\nTry again.");
                     }
                 }
             }).catch((err) => {
-                alert(err.message)
-                alert(JSON.stringify(err));
                 alert(`Sorry, but ${userInput} is not a word\nOr at least I don't think it is...`)
             })
         }
@@ -254,7 +251,7 @@ export function Board(props) {
 
     //handle letters, backspace and enter
     const handleUserKeyboard = (event) => {
-        var didPlayerWin = (typeof guesses !== "undefined" && guesses.length > 0) ? guesses.at(-1).score.every(val => val === 2) : false;
+        var didPlayerWin = (typeof guesses !== "undefined" && guesses.length > 0) ? guesses[guesses.length - 1].score.every(val => val === 2) : false;
         var isBoardFull = (typeof guesses !== "undefined" && guesses.length > 0) ? (guesses.length >= userLength + 1) : false;
 
         // check if board is full of guesses, or the player has won
