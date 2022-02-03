@@ -165,8 +165,8 @@ export function Board(props) {
 
     //handle letters, backspace and enter
     const handleUserKeyboard = (event) => {
-        var didPlayerWin = guesses.at(-1).score.every(val => val === 2);
-        var isBoardFull = (guesses.length >= userLength + 1);
+        var didPlayerWin = typeof guesses !== "undefined" ? false : guesses.at(-1).score.every(val => val === 2);
+        var isBoardFull = typeof guesses !== "undefined" ? false : (guesses.length >= userLength + 1);
 
         // check if board is full of guesses, or the player has won
         if(!(didPlayerWin || isBoardFull))
@@ -258,7 +258,7 @@ export function Board(props) {
     return (
         <>
         <div className="game-container">
-            <Menu handleChangeMode={handleChangeMode} mode={userLength} toggleShowMenu={toggleShowMenu} showMenu={showMenu}/>
+            <Menu guesses={guesses} handleChangeMode={handleChangeMode} mode={userLength} toggleShowMenu={toggleShowMenu} showMenu={showMenu}/>
             <div className="board-container">
                 <GuessResultsBoard guesses={tempGuesses} length={userLength}/>
             </div>

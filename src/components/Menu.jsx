@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Cookies from "js-cookie";
 
 export function Menu(props) {
-    const {showMenu, toggleShowMenu, mode} = props;
+    const {showMenu, toggleShowMenu, mode, guesses} = props;
     const [userData, setUserData] = useState({});
 
     const handleModeBtnClick = (mode) => {
@@ -28,6 +28,52 @@ export function Menu(props) {
         {
             return "";
         }
+    }
+
+    const isGameSharable = () => {
+        var didPlayerWin = (typeof guesses !== "undefined" && guesses.length > 0) ? guesses.at(-1).score.every(val => val === 2) : false;
+        var isBoardFull = (typeof guesses !== "undefined" && guesses.length > 0) ? (guesses.length >= mode + 1) : false;
+
+        // check if board is full of guesses, or the player has won
+        if(didPlayerWin || isBoardFull)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    const getSharableText = () => {
+        const greenSquare = "U+1F7E9";
+        const yellowSquare = "U+1F7E8";
+        const blackSquare = "U+2B1B";
+
+        let modeData = userData[mode];
+        let shareString = "";
+
+        if(typeof guesses !== "undefined" && guesses.length > 0)
+        {
+            guesses.forEach(guess => {
+                if(guess.score)
+                {
+                    guess.score.forEach(val => {
+                        if(val === 2) {
+                            shareString += String.fromCodePoint(0x1F7E9);
+                        }
+                        else if(val === 1) {
+                            shareString += String.fromCodePoint(0x1F7E8);
+                        }
+                        else {
+                            shareString += String.fromCodePoint(0x2B1B);
+                        }
+                    })
+                    shareString += '\n';
+                }
+            });
+        }
+
+        shareString += "Join the Beta Test:\nhttps://main.d7slqn5vhod10.amplifyapp.com"
+
+        return `${shareString}`;
     }
 
     return (
@@ -95,6 +141,9 @@ export function Menu(props) {
                     </h1>
                     */
                     }
+                    <div className={`btn btn-danger ${isGameSharable() ? '' : 'disabled'}`} onClick={() => navigator.clipboard.writeText(getSharableText())}>
+                        Share
+                    </div>
                     <div className="btn btn-primary" onClick={toggleShowMenu}>
                         Close Menu
                     </div>
@@ -104,3 +153,5 @@ export function Menu(props) {
         </>
     )
 }
+
+//() => navigator.clipboard.writeText(getSharableText())
